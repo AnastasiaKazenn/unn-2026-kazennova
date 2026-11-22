@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY bot/ ./bot/
+COPY main.py ./
+
+CMD [".venv/bin/python", "main.py"]
